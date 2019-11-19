@@ -19,11 +19,13 @@ package cd.go.plugin.base.executors.scm.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.experimental.Accessors;
 
 import java.util.Date;
 import java.util.List;
 
+@Getter
 @Builder
 @Accessors(fluent = true)
 public class Revision {

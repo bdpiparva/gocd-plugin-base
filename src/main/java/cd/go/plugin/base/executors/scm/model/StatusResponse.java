@@ -18,8 +18,10 @@ package cd.go.plugin.base.executors.scm.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 
+@Getter
 public class StatusResponse {
     private static final String SUCCESS = "success";
     private static final String FAILURE = "failure";
