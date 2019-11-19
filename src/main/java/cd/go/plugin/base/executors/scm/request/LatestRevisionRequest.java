@@ -14,14 +14,27 @@
  * limitations under the License.
  */
 
-package cd.go.plugin.base.executors.scm;
+package cd.go.plugin.base.executors.scm.request;
 
-import cd.go.plugin.base.executors.scm.model.StatusResponse;
-import cd.go.plugin.base.executors.scm.request.CheckConnectionRequest;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
-public abstract class CheckConnectionExecutor<T> extends ScmExecutor<CheckConnectionRequest<T>, StatusResponse> {
-    @Override
-    protected CheckConnectionRequest<T> parseRequest(String requestBody) {
-        return new CheckConnectionRequest<>(parseScmConfiguration(requestBody, getGenericClassType(this)));
+public class LatestRevisionRequest<T> {
+    @Expose
+    @SerializedName("flyweight-folder")
+    private String flyweightFolder;
+
+    private T scmConfiguration;
+
+    public String getFlyweightFolder() {
+        return flyweightFolder;
+    }
+
+    public T getScmConfiguration() {
+        return scmConfiguration;
+    }
+
+    public void setScmConfiguration(T scmConfiguration) {
+        this.scmConfiguration = scmConfiguration;
     }
 }

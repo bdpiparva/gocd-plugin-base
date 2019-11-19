@@ -14,14 +14,17 @@
  * limitations under the License.
  */
 
-package cd.go.plugin.base.executors.scm;
+package cd.go.plugin.base.executors.scm.request;
 
-import cd.go.plugin.base.executors.scm.model.StatusResponse;
-import cd.go.plugin.base.executors.scm.request.CheckConnectionRequest;
+public class CheckConnectionRequest<T> {
+    private T scmConfiguration;
 
-public abstract class CheckConnectionExecutor<T> extends ScmExecutor<CheckConnectionRequest<T>, StatusResponse> {
-    @Override
-    protected CheckConnectionRequest<T> parseRequest(String requestBody) {
-        return new CheckConnectionRequest<>(parseScmConfiguration(requestBody, getGenericClassType(this)));
+    public CheckConnectionRequest(T scmConfiguration) {
+        this.scmConfiguration = scmConfiguration;
+    }
+
+
+    public T getScmConfiguration() {
+        return scmConfiguration;
     }
 }

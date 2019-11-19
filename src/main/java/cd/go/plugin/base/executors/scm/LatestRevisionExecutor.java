@@ -17,7 +17,21 @@
 package cd.go.plugin.base.executors.scm;
 
 import cd.go.plugin.base.executors.scm.model.LatestRevisionResponse;
+import cd.go.plugin.base.executors.scm.request.LatestRevisionRequest;
+import com.google.gson.reflect.TypeToken;
 
-public abstract class LatestRevisionExecutor<T> extends ScmExecutor<T, LatestRevisionResponse> {
+import java.lang.reflect.Type;
 
+import static cd.go.plugin.base.GsonTransformer.fromJson;
+
+public abstract class LatestRevisionExecutor<T> extends ScmExecutor<LatestRevisionRequest<T>, LatestRevisionResponse> {
+    @Override
+    protected LatestRevisionRequest<T> parseRequest(String requestBody) {
+        Type type = new TypeToken<LatestRevisionRequest<T>>() {
+        }.getType();
+
+        LatestRevisionRequest<T> request = fromJson(requestBody, type);
+        request.setScmConfiguration(parseScmConfiguration(requestBody, getGenericClassType(this)));
+        return request;
+    }
 }

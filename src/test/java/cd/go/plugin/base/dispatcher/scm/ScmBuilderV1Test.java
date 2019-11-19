@@ -20,7 +20,9 @@ import cd.go.plugin.base.GsonTransformer;
 import cd.go.plugin.base.dispatcher.RequestDispatcher;
 import cd.go.plugin.base.executors.scm.*;
 import cd.go.plugin.base.executors.scm.model.*;
+import cd.go.plugin.base.executors.scm.request.CheckConnectionRequest;
 import cd.go.plugin.base.executors.scm.request.CheckoutRequest;
+import cd.go.plugin.base.executors.scm.request.LatestRevisionRequest;
 import cd.go.plugin.base.executors.scm.request.LatestRevisionSinceRequest;
 import cd.go.plugin.base.test_helper.annotations.JsonSource;
 import cd.go.plugin.base.validation.ValidationResult;
@@ -205,7 +207,6 @@ class DummyCheckoutExecutor extends CheckoutExecutor<DummyScmConfig> {
 }
 
 class DummyLatestRevisionSinceExecutor extends LatestRevisionSinceExecutor<DummyScmConfig> {
-
     @Override
     protected LatestRevisionSinceResponse execute(LatestRevisionSinceRequest<DummyScmConfig> request) throws Exception {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
@@ -229,7 +230,7 @@ class DummyLatestRevisionSinceExecutor extends LatestRevisionSinceExecutor<Dummy
 
 class DummyLatestRevisionExecutor extends LatestRevisionExecutor<DummyScmConfig> {
     @Override
-    protected LatestRevisionResponse execute(DummyScmConfig dummyScmConfig) throws Exception {
+    protected LatestRevisionResponse execute(LatestRevisionRequest<DummyScmConfig> request) throws Exception {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
         ModifiedFile file = ModifiedFile.builder().action("added").fileName("readme.md").build();
 
@@ -250,10 +251,10 @@ class DummyLatestRevisionExecutor extends LatestRevisionExecutor<DummyScmConfig>
 
 class DummyCheckConnectionExecutor extends CheckConnectionExecutor<DummyScmConfig> {
     @Override
-    protected StatusResponse execute(DummyScmConfig dummyScmConfig) {
-        assertThat(dummyScmConfig.url).isEqualTo("http://localhost.com");
-        assertThat(dummyScmConfig.username).isEqualTo("user");
-        assertThat(dummyScmConfig.password).isEqualTo("password");
+    protected StatusResponse execute(CheckConnectionRequest<DummyScmConfig> request) {
+        assertThat(request.getScmConfiguration().url).isEqualTo("http://localhost.com");
+        assertThat(request.getScmConfiguration().username).isEqualTo("user");
+        assertThat(request.getScmConfiguration().password).isEqualTo("password");
         return StatusResponse.success("Done");
     }
 }

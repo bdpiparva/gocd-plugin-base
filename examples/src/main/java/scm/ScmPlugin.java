@@ -25,7 +25,9 @@ import cd.go.plugin.base.executors.scm.LatestRevisionSinceExecutor;
 import cd.go.plugin.base.executors.scm.model.LatestRevisionResponse;
 import cd.go.plugin.base.executors.scm.model.LatestRevisionSinceResponse;
 import cd.go.plugin.base.executors.scm.model.StatusResponse;
+import cd.go.plugin.base.executors.scm.request.CheckConnectionRequest;
 import cd.go.plugin.base.executors.scm.request.CheckoutRequest;
+import cd.go.plugin.base.executors.scm.request.LatestRevisionRequest;
 import cd.go.plugin.base.executors.scm.request.LatestRevisionSinceRequest;
 import cd.go.plugin.base.validation.ValidationResult;
 import cd.go.plugin.base.validation.Validator;
@@ -77,7 +79,7 @@ public class ScmPlugin implements GoPlugin {
     private static class ExampleLatestRevisionExecutor extends LatestRevisionExecutor<ScmConfig> {
 
         @Override
-        protected LatestRevisionResponse execute(ScmConfig scmConfig) throws Exception {
+        protected LatestRevisionResponse execute(LatestRevisionRequest<ScmConfig> scmConfig) throws Exception {
             return null;
         }
     }
@@ -122,7 +124,7 @@ class UrlValidator implements Validator {
 
 class ExampleCheckConnectionExecutor extends CheckConnectionExecutor<ScmConfig> {
     @Override
-    protected StatusResponse execute(ScmConfig scmConfig) throws Exception {
+    protected StatusResponse execute(CheckConnectionRequest<ScmConfig> scmConfig) throws Exception {
         // Implement Me!!
         return null;
     }

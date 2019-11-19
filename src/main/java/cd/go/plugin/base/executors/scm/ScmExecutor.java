@@ -16,30 +16,33 @@
 
 package cd.go.plugin.base.executors.scm;
 
-import cd.go.plugin.base.ConfigurationParser;
-import cd.go.plugin.base.GsonTransformer;
 import cd.go.plugin.base.executors.Executor;
 import com.thoughtworks.go.plugin.api.request.GoPluginApiRequest;
 import com.thoughtworks.go.plugin.api.response.GoPluginApiResponse;
 
 import java.lang.reflect.ParameterizedType;
 
+import static cd.go.plugin.base.ConfigurationParser.asMap;
 import static cd.go.plugin.base.GsonTransformer.fromJson;
 import static cd.go.plugin.base.GsonTransformer.toJson;
 import static com.thoughtworks.go.plugin.api.response.DefaultGoPluginApiResponse.success;
 
-public abstract class ScmExecutor<T, R> implements Executor {
+public abstract class ScmExecutor<Request, ReturnType> implements Executor {
     @Override
     public GoPluginApiResponse execute(GoPluginApiRequest request) throws Exception {
-        String filteredConfig = toJson(ConfigurationParser.asMap(request.requestBody(), true));
-        R response = execute(fromJson(filteredConfig, getGenericClassType()));
-        return success(GsonTransformer.toJson(response));
+        return success(toJson(execute(parseRequest(request.requestBody()))));
     }
-
-    protected abstract R execute(T t) throws Exception;
 
     @SuppressWarnings("unchecked")
-    private Class<T> getGenericClassType() {
-        return (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+    protected <T> Class<T> getGenericClassType(Object object) {
+        return (Class<T>) ((ParameterizedType) object.getClass().getGenericSuperclass()).getActualTypeArguments()[0];
     }
+
+    protected <T> T parseScmConfiguration(String requestBody, Class<T> type) {
+        return fromJson(toJson(asMap(requestBody, true)), type);
+    }
+
+    protected abstract ReturnType execute(Request request) throws Exception;
+
+    protected abstract Request parseRequest(String requestBody);
 }

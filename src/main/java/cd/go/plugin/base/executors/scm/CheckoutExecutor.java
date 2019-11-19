@@ -16,46 +16,23 @@
 
 package cd.go.plugin.base.executors.scm;
 
-import cd.go.plugin.base.executors.Executor;
 import cd.go.plugin.base.executors.scm.model.StatusResponse;
 import cd.go.plugin.base.executors.scm.request.CheckoutRequest;
 import com.google.gson.reflect.TypeToken;
-import com.thoughtworks.go.plugin.api.request.GoPluginApiRequest;
-import com.thoughtworks.go.plugin.api.response.GoPluginApiResponse;
 
-import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
-import static cd.go.plugin.base.ConfigurationParser.asMap;
 import static cd.go.plugin.base.GsonTransformer.fromJson;
-import static cd.go.plugin.base.GsonTransformer.toJson;
-import static com.thoughtworks.go.plugin.api.response.DefaultGoPluginApiResponse.success;
 
-public abstract class CheckoutExecutor<T> implements Executor {
+public abstract class CheckoutExecutor<T> extends ScmExecutor<CheckoutRequest<T>, StatusResponse> {
 
     @Override
-    public GoPluginApiResponse execute(GoPluginApiRequest request) throws Exception {
-        return success(toJson(execute(toCheckoutRequest(request))));
-    }
-
-    protected abstract StatusResponse execute(CheckoutRequest<T> request) throws Exception;
-
-    private CheckoutRequest<T> toCheckoutRequest(GoPluginApiRequest request) {
+    protected CheckoutRequest<T> parseRequest(String requestBody) {
         Type type = new TypeToken<CheckoutRequest<T>>() {
         }.getType();
 
-        CheckoutRequest<T> req = fromJson(request.requestBody(), type);
-        req.setScmConfiguration(parseScmConfiguration(request.requestBody()));
-        return req;
-    }
-
-
-    @SuppressWarnings("unchecked")
-    private Class<T> getGenericClassType() {
-        return (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
-    }
-
-    private T parseScmConfiguration(String requestBody) {
-        return fromJson(toJson(asMap(requestBody, true)), getGenericClassType());
+        CheckoutRequest<T> request = fromJson(requestBody, type);
+        request.setScmConfiguration(parseScmConfiguration(requestBody, getGenericClassType(this)));
+        return request;
     }
 }

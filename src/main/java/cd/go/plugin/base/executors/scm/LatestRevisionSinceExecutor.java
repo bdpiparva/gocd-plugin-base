@@ -16,46 +16,22 @@
 
 package cd.go.plugin.base.executors.scm;
 
-import cd.go.plugin.base.executors.Executor;
 import cd.go.plugin.base.executors.scm.model.LatestRevisionSinceResponse;
 import cd.go.plugin.base.executors.scm.request.LatestRevisionSinceRequest;
 import com.google.gson.reflect.TypeToken;
-import com.thoughtworks.go.plugin.api.request.GoPluginApiRequest;
-import com.thoughtworks.go.plugin.api.response.GoPluginApiResponse;
 
-import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
-import static cd.go.plugin.base.ConfigurationParser.asMap;
 import static cd.go.plugin.base.GsonTransformer.fromJson;
-import static cd.go.plugin.base.GsonTransformer.toJson;
-import static com.thoughtworks.go.plugin.api.response.DefaultGoPluginApiResponse.success;
 
-public abstract class LatestRevisionSinceExecutor<T> implements Executor {
+public abstract class LatestRevisionSinceExecutor<T> extends ScmExecutor<LatestRevisionSinceRequest<T>, LatestRevisionSinceResponse> {
 
-    @Override
-    public GoPluginApiResponse execute(GoPluginApiRequest request) throws Exception {
-        return success(toJson(execute(toLatestRevisionSinceRequest(request))));
-    }
-
-    protected abstract LatestRevisionSinceResponse execute(LatestRevisionSinceRequest<T> request) throws Exception;
-
-    private LatestRevisionSinceRequest<T> toLatestRevisionSinceRequest(GoPluginApiRequest request) {
+    protected LatestRevisionSinceRequest<T> parseRequest(String requestBody) {
         Type type = new TypeToken<LatestRevisionSinceRequest<T>>() {
         }.getType();
 
-        LatestRevisionSinceRequest<T> req = fromJson(request.requestBody(), type);
-        req.setScmConfiguration(parseScmConfiguration(request.requestBody()));
+        LatestRevisionSinceRequest<T> req = fromJson(requestBody, type);
+        req.setScmConfiguration(parseScmConfiguration(requestBody, getGenericClassType(this)));
         return req;
-    }
-
-
-    @SuppressWarnings("unchecked")
-    private Class<T> getGenericClassType() {
-        return (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
-    }
-
-    private T parseScmConfiguration(String requestBody) {
-        return fromJson(toJson(asMap(requestBody, true)), getGenericClassType());
     }
 }
