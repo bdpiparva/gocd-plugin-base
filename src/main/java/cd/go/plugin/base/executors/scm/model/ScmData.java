@@ -30,7 +30,7 @@ public class ScmData extends HashMap<String, Object> {
             scmData = new ScmData();
         }
 
-        public ScmDataBuilder add(String key, String value) {
+        public ScmDataBuilder add(String key, Object value) {
             scmData.put(key, value);
             return this;
         }
