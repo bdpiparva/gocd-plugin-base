@@ -49,11 +49,11 @@ dependencies {
   annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.10'
 
   compileOnly group: 'cd.go.plugin', name: 'go-plugin-api', version: '21.2.0'
-  compileOnly group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.7.1'
+  compileOnly group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.7.2'
   compileOnly group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: '5.7.1'
 
   testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.7.1'
-  testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.4.1'
+  testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.7.2'
   testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: '5.4.1'
   testCompile group: 'org.assertj', name: 'assertj-core', version: '3.19.0'
   testCompile group: 'org.mockito', name: 'mockito-core', version: '3.8.0'
